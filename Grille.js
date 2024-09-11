@@ -15,6 +15,21 @@ class Grille {
     }
   
     ajouterPiece(piece) {
+      let x = Math.floor(piece.x / this.tailleCase);
+      let y = Math.floor(piece.y / this.tailleCase);
+  
+      if (x >= 0 && x < this.cols && y >= 0 && y < this.rows) {
+        this.matrice[y][x] = 1;
+      }
+    }
+
+    collision(piece) {
+      let x = Math.floor(piece.x / this.tailleCase);
+      let y = Math.floor(piece.y / this.tailleCase);
+  
+
+      return false; 
     }
   }
+    
   

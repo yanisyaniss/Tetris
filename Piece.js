@@ -1,6 +1,6 @@
 class Piece {
     constructor() {
-      this.x = 0
+      this.x = Math.floor(Math.random() * (width / 40)) * 40; 
       this.y = 0;
       this.taille = 40;
     }

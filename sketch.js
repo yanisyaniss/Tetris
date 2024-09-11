@@ -9,12 +9,13 @@ function setup() {
 
 function draw() {
   background(0);
-  grille.afficher();  
-  pieceActuelle.afficher(); 
-  pieceActuelle.descendre();
+  grille.afficher();
+  pieceActuelle.afficher();
 
-  if (pieceActuelle.estEnBas()) {
-    grille.ajouterPiece(pieceActuelle);
-    pieceActuelle = new Piece();  
+  if (frameCount % 30 === 0) {
+    if (pieceActuelle.descendre(grille)) {
+      grille.ajouterPiece(pieceActuelle);
+      pieceActuelle = new Piece();
+    }
   }
 }
