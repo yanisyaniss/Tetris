@@ -1,21 +1,49 @@
 class Piece {
-    constructor() {
-      this.x = Math.floor(Math.random() * (width / 40)) * 40; 
-      this.y = 0;
-      this.taille = 40;
-    }
-  
-    afficher() {
-      fill(255, 0, 0);
-      rect(this.x, this.y, this.taille, this.taille); 
-    }
-  
-    descendre() {
-      this.y += this.taille; 
-    }
-  
-    estEnBas() {
-      return this.y >= height - this.taille; 
+  constructor() {
+    this.taille = 40;
+    this.x = Math.floor(Math.random() * (width / this.taille)) * this.taille;
+    this.y = 0;
+    this.formes = [
+      [[0, 0], [1, 0], [0, 1], [1, 1]],
+      [[0, 0], [1, 0], [2, 0], [3, 0]],
+      [[0, 0], [-1, 1], [0, 1], [1, 1]],
+      [[0, 0], [0, 1], [0, 2], [1, 2]],
+      [[0, 0], [0, 1], [0, 2], [-1, 2]],
+      [[0, 0], [1, 0], [1, 1], [2, 1]],
+      [[0, 0], [-1, 0], [-1, 1], [-2, 1]]
+    ];
+    this.forme = random(this.formes);
+  }
+  afficher() {
+    fill(255, 0, 0);
+    noStroke();
+    for (let i = 0; i < this.forme.length; i++) {
+      let bloc = this.forme[i];
+      rect(this.x + bloc[0] * this.taille, this.y + bloc[1] * this.taille, this.taille, this.taille);
     }
   }
-  
+
+  descendre(grille) {
+    this.y += this.taille;
+    if (this.y + this.taille > height || grille.collision(this)) {
+      this.y -= this.taille;
+      return true;
+    }
+    return false;
+  }
+  bouger(direction, grille) {
+    if (direction === "gauche") {
+      this.x -= this.taille;
+    } else if (direction === "droite") {
+      this.x += this.taille;
+    }
+
+    if (this.x < 0 || this.x + this.taille > width || grille.collision(this)) {
+      if (direction === "gauche") {
+        this.x += this.taille;
+      } else if (direction === "droite") {
+        this.x -= this.taille;
+      }
+    }
+  }
+}

@@ -1,11 +1,7 @@
 let grille;
 let pieceActuelle;
 
-function upset() {
-  let name = 'Utilisateur';
-  console.log(`Bienvenu , ${name} dans tetris`);
-}
-upset()
+
 function setup() {
   createCanvas(200, 400);
   grille = new Grille();
@@ -24,3 +20,12 @@ function draw() {
     }
   }
 }
+
+function keyPressed() {
+  if (keyCode == LEFT_ARROW) {
+    pieceActuelle.bouger("gauche", grille); 
+  } else if (keyCode == RIGHT_ARROW) {
+    pieceActuelle.bouger("droite", grille); 
+  }
+}
+
