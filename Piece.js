@@ -34,17 +34,17 @@ class Piece {
   }
 
   bouger(direction, grille) {
-    if (direction === "gauche") {
+    if (direction == "gauche") {
       this.x -= this.taille; // Déplace la pièce à gauche
-    } else if (direction === "droite") {
+    } else if (direction == "droite") {
       this.x += this.taille; // Déplace la pièce à droite
     }
 
     // verif si pièce sort des limites ou entre en collision
     if (this.x < 0 || this.x + this.taille > width || grille.collision(this)) {
-      if (direction === "gauche") {
+      if (direction == "gauche") {
         this.x += this.taille; // Annule le mouvement vers la gauche si collision
-      } else if (direction === "droite") {
+      } else if (direction == "droite") {
         this.x -= this.taille; // Annule le mouvement vers la droite si collision
       }
     }
