@@ -1,29 +1,95 @@
 let grille;
 let pieceActuelle;
+let score = 0;
+let gameOverVisible = false; 
+let jeuEnCours = true;
 
 function setup() {
-  createCanvas(200, 400); // zone de jeu
+  createCanvas(300, 600);
   grille = new Grille();
   pieceActuelle = new Piece();
+  updateScore();
 }
 
 function draw() {
-  background(0); // Effacement de l'écran à chaque frame
+  background(0);
   grille.afficher();
-  pieceActuelle.afficher();
+  
+  if (jeuEnCours) {
+    pieceActuelle.afficher();
 
-  if (frameCount % 30 == 0) { // descendre toutes les 30 frames
-    if (pieceActuelle.descendre(grille)) {
-      grille.ajouterPiece(pieceActuelle); // Ajoute la pièce dans la grille si elle touche le bas
-      pieceActuelle = new Piece();
+    if (frameCount % 20 == 0) {
+      if (pieceActuelle.descendre(grille)) {
+        grille.ajouterPiece(pieceActuelle);
+        score += 10;
+        
+        let gameOver = false;
+        for (let bloc of pieceActuelle.forme) {
+          let yPos = pieceActuelle.y + bloc[1] * pieceActuelle.taille;
+          if (yPos <= 0) {
+            gameOver = true;
+            break;
+          }
+        }
+        
+        if (gameOver) {
+          jeuEnCours = false;
+          afficherGameOver();
+        } else {
+          pieceActuelle = new Piece();
+          updateScore();
+        }
+      }
     }
+  } else if (gameOverVisible) {
+    fill(255, 0, 0);
+    textSize(40);
+    textAlign(CENTER, CENTER);
+    text("GAME OVER", width/2, height/2);
+    
+    fill(255);
+    textSize(20);
+    text("Appuyez sur F5 pour recommencer", width/2, height/2 + 50);
   }
 }
 
 function keyPressed() {
+  if (!jeuEnCours) return;
+  
   if (keyCode == LEFT_ARROW) {
-    pieceActuelle.bouger("gauche", grille); // Déplacement à gauche si la touche gauche est pressée
+    pieceActuelle.bouger("gauche", grille);
   } else if (keyCode == RIGHT_ARROW) {
-    pieceActuelle.bouger("droite", grille); 
+    pieceActuelle.bouger("droite", grille);
+  } else if (keyCode == DOWN_ARROW) {
+    if (pieceActuelle.descendre(grille)) {
+      grille.ajouterPiece(pieceActuelle);
+      score += 10;
+      
+      if (pieceActuelle.y <= 0) {
+        jeuEnCours = false;
+        afficherGameOver();
+        return;
+      }
+      
+      pieceActuelle = new Piece();
+      updateScore();
+    }
   }
+}
+
+function updateScore() {
+  document.getElementById('score').textContent = `Score: ${score}`;
+}
+
+
+function afficherGameOver() {
+  gameOverVisible = true; 
+  fill(255, 0, 0);
+  textSize(40);
+  textAlign(CENTER, CENTER);
+  text("GAME OVER", width/2, height/2);
+  
+  fill(255);
+  textSize(20);
+  text("Appuyez sur F5 pour recommencer", width/2, height/2 + 50);
 }

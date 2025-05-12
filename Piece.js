@@ -1,51 +1,51 @@
 class Piece {
   constructor() {
-    this.taille = 40;
-    this.x = Math.floor(Math.random() * (width / this.taille)) * this.taille; // Position aléatoire en x sur la grille
-    this.y = 0; 
+    this.taille = 30;
+    this.x = Math.floor(Math.random() * ((width - 60) / this.taille)) * this.taille;
+    this.y = -60; 
+    
     this.formes = [
-      [[0, 0], [1, 0], [0, 1], [1, 1]],  
-      [[0, 0], [1, 0], [2, 0], [3, 0]],  
-      [[0, 0], [-1, 1], [0, 1], [1, 1]], 
-      [[0, 0], [0, 1], [0, 2], [1, 2]],  
-      [[0, 0], [0, 1], [0, 2], [-1, 2]], 
-      [[0, 0], [1, 0], [1, 1], [2, 1]],  
-      [[0, 0], [-1, 0], [-1, 1], [-2, 1]]
+      { form: [[0, 0], [1, 0], [0, 1], [1, 1]], color: [255, 0, 0] }, 
+      { form: [[0, 0], [1, 0], [2, 0], [3, 0]], color: [0, 255, 0] }, 
+      { form: [[0, 0], [-1, 1], [0, 1], [1, 1]], color: [0, 0, 255] }, 
+      { form: [[0, 0], [0, 1], [0, 2], [1, 2]], color: [255, 255, 0] }, 
+      { form: [[0, 0], [0, 1], [0, 2], [-1, 2]], color: [255, 0, 255] },
+      { form: [[0, 0], [1, 0], [1, 1], [2, 1]], color: [0, 255, 255] }, 
+      { form: [[0, 0], [-1, 0], [-1, 1], [-2, 1]], color: [255, 165, 0] } 
     ];
-    this.forme = random(this.formes); 
+    this.type = floor(random(this.formes.length));
+    this.forme = this.formes[this.type].form;
+    this.couleur = this.formes[this.type].color;
   }
   
   afficher() {
-    fill(255, 0, 0); // bloc en rouge
+    fill(this.couleur);
     noStroke();
-    for (let i = 0; i < this.forme.length; i++) {
-      let bloc = this.forme[i];
-      rect(this.x + bloc[0] * this.taille, this.y + bloc[1] * this.taille, this.taille, this.taille); // Dessine chaque bloc de la pièce
+    for (let bloc of this.forme) {
+      rect(this.x + bloc[0] * this.taille, this.y + bloc[1] * this.taille, this.taille, this.taille);
     }
   }
 
   descendre(grille) {
-    this.y += this.taille; 
-    if (this.y + this.taille > height || grille.collision(this)) { // Vérifie les collisions 
+    this.y += this.taille;
+    if (this.y + this.taille > height || grille.collision(this)) {
       this.y -= this.taille;
       return true;
     }
     return false;
   }
-
   bouger(direction, grille) {
     if (direction == "gauche") {
-      this.x -= this.taille; // Déplace la pièce à gauche
+      this.x -= this.taille;
     } else if (direction == "droite") {
-      this.x += this.taille; // Déplace la pièce à droite
+      this.x += this.taille;
     }
 
-    // verif si pièce sort des limites ou entre en collision
     if (this.x < 0 || this.x + this.taille > width || grille.collision(this)) {
       if (direction == "gauche") {
-        this.x += this.taille; // Annule le mouvement vers la gauche si collision
+        this.x += this.taille;
       } else if (direction == "droite") {
-        this.x -= this.taille; // Annule le mouvement vers la droite si collision
+        this.x -= this.taille;
       }
     }
   }
