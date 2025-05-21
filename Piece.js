@@ -13,6 +13,7 @@ class Piece {
       { form: [[0, 0], [1, 0], [1, 1], [2, 1]], color: [0, 255, 255] }, 
       { form: [[0, 0], [-1, 0], [-1, 1], [-2, 1]], color: [255, 165, 0] } 
     ];
+    
     this.type = floor(random(this.formes.length));
     this.forme = this.formes[this.type].form;
     this.couleur = this.formes[this.type].color;
@@ -34,6 +35,7 @@ class Piece {
     }
     return false;
   }
+
   bouger(direction, grille) {
     if (direction == "gauche") {
       this.x -= this.taille;
@@ -47,6 +49,16 @@ class Piece {
       } else if (direction == "droite") {
         this.x -= this.taille;
       }
+    }
+  }
+
+  tourner(grille) {
+    let nouvelleForme = this.forme.map(bloc => [ -bloc[1], bloc[0] ]);
+
+    let ancienneForme = this.forme;
+    this.forme = nouvelleForme;
+    if (this.x < 0 || this.x + this.taille > width || grille.collision(this)) {
+      this.forme = ancienneForme;
     }
   }
 }
